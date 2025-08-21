@@ -1,0 +1,153 @@
+---
+description: Core operational rules for the Cursor agent
+globs:
+alwaysApply: true
+---
+## Core Rules
+
+You have two modes of operation:
+
+1. Plan mode - You will work with the user to define a plan, gather all the necessary information, but will not make any changes.
+2. Act mode - You will make changes to the codebase based on the approved plan.
+
+- You start in plan mode and will not move to act mode until the plan is approved by the user.
+- You will print `# Mode: PLAN` when in plan mode and `# Mode: ACT` when in act mode at the beginning of each response.
+- Unless explicitly instructed by the user to switch to act mode by typing `ACT`, you will stay in plan mode.
+- You will revert to plan mode after every response unless the user types `PLAN`.
+- If the user asks for an action in plan mode, remind them they need to approve the plan first.
+- When in plan mode, always output the full updated plan in every response.
+- During plan mode, you should thoroughly think through potential challenges and edge cases.
+- In act mode, focus on implementing the agreed plan precisely and efficiently.
+
+
+## Enhanced PLAN Mode Workflow
+
+### Complexity Analysis (MANDATORY)
+Before creating any plan, you MUST analyze the request complexity using these criteria:
+- **Multiple file changes** (>3 files)
+- **UI-heavy tasks** (forms, modals, tables, new pages)
+- **Estimated time** (>30 minutes of work)
+- **Multiple feature areas** (authentication + dashboard + settings)
+
+### For COMPLEX Requests (meeting any criteria above):
+
+1. **Memory Bank Reference Analysis**
+   - Identify and list ALL specific memory bank files relevant to the request
+   - Include file names in your plan (e.g., "Will reference: 04-heroui.md, design-guidelines.md")
+   - State which guidelines from each file will be applied
+
+2. **TaskMaster Integration**
+   - Create or reuse existing TaskMaster project/tag to maintain context
+   - Use `analyze_project_complexity` tool to determine task expansion needs
+   - Create detailed task breakdown organized by feature area and complexity
+   - Set up proper task dependencies using TaskMaster's dependency system
+   - Present both high-level overview AND detailed TaskMaster breakdown
+
+3. **Complexity Management**
+   - For overly complex requests (>10 tasks or >2 hours estimated), suggest breaking into multiple PLAN sessions
+   - Organize tasks by feature areas: authentication, dashboard, settings, etc.
+   - Use TaskMaster tools like `expand_task`, `scope_up_task`, `scope_down_task` as needed
+
+4. **Plan Presentation Format**
+   ```markdown
+   ## Request Complexity: [SIMPLE/COMPLEX]
+   ## Memory Bank Files Referenced:
+   - [List specific files: 00-project-overview.md, 04-heroui.md, etc.]
+
+   ## High-Level Overview:
+   [Summary of what will be accomplished]
+
+   ## TaskMaster Project:
+   [Detailed task breakdown with dependencies]
+
+   ## Design Review Points:
+   [When design reviews will trigger - by feature area]
+   ```
+
+### For SIMPLE Requests:
+- Create standard plan without TaskMaster integration
+- Still reference relevant memory bank files
+- Focus on straightforward implementation
+
+## Enhanced ACT Mode Execution
+
+### Autonomous Execution Rules
+1. **Full Autonomy** - Execute all tasks sequentially without user confirmation
+2. **TaskMaster-Driven** - Use TaskMaster's `next_task` and dependency system to determine execution order
+3. **Error Handling** - Log errors to respective task files, try alternatives, then move to unrelated tasks
+4. **No User Intervention** - Continue execution even if individual tasks fail
+
+### Task Execution Workflow
+1. **Get Next Task** - Use `next_task` tool to identify what to work on
+2. **Update Task Status** - Mark tasks as `in-progress` when starting
+3. **Execute Task** - Implement according to plan and memory bank guidelines
+4. **Handle Errors**:
+   - Try alternative approaches automatically
+   - If still failing, log detailed error info to task file using `update_task` or `update_subtask`
+   - Mark task as appropriate status (`deferred` for dependency issues, `cancelled` if impossible)
+   - Skip dependent tasks if prerequisites failed
+   - Continue with unrelated tasks
+5. **Update Task Status** - Mark as `done` when completed successfully
+
+### Design Review Integration
+1. **Trigger Points** - After completing logical groups of UI-related tasks by feature area:
+   - Authentication UI tasks completed → trigger design review
+   - Dashboard UI tasks completed → trigger design review
+   - Settings UI tasks completed → trigger design review
+
+2. **Design Review Process**:
+   - Use Playwright MCP tools to capture screenshots across viewports
+   - Apply design-reviewer.md criteria and scoring
+   - **High Confidence Fixes** (score >7.0): Apply suggested improvements automatically
+   - **Low Confidence Issues** (score <7.0): Create improvement tasks in TaskMaster using `add_task`
+
+3. **Review Failure Handling**:
+   - Never stop execution for design review failures
+   - Auto-fix issues where confidence is high (>8.0 certainty)
+   - Create specific improvement tasks for remaining issues
+   - Continue with non-UI tasks while design fixes are pending
+
+### Error Recovery Strategy
+- **Dependency Failures**: Skip dependent tasks, continue with independent ones
+- **File Access Issues**: Log error, try alternative file paths, continue
+- **API/Service Failures**: Log error details, mark task as deferred, continue
+- **Build/Compilation Errors**: Log error, attempt basic fixes, continue if possible
+- **Design Review Failures**: Create improvement tasks, continue execution
+
+### TaskMaster Integration During ACT Mode
+- Use `get_tasks` to view current task status
+- Use `set_task_status` to update progress
+- Use `add_task` to create new improvement tasks from design reviews
+- Use `update_task` and `update_subtask` to log error details and progress notes
+- Use dependency validation tools to ensure proper execution order
+
+## Memory Bank Integration Requirements
+
+### Automatic Reference During PLAN Mode
+Analyze the request and automatically reference relevant memory bank files:
+- **UI/Component work**: 04-heroui.md, design-guidelines.md, design-reviewer.md
+- **New features**: 00-project-overview.md, 01-architecture.md, 02-coding-rules.md just as a reference but modify it accoring to our project these md files are of another project which we need to replicate.
+- **Code quality**: 02-coding-rules.md of another projecet just take inference from it as it is not this project's but take inference from it, design-reviewer.md 
+
+### MANDATORY Memory Bank Compliance
+During ACT mode, ALL work MUST follow:
+- **HeroUI components only** (04-heroui.md) - Never use native HTML for interactive elements
+- **Design patterns** (design-guidelines.md) - Colorful headers, glass-blur effects, proper animations
+- **Coding standards** (02-coding-rules.md) - TypeScript best practices, React patterns -> just take inference from this md as it is another project's but we need to replicate it accordingly for our project.
+- **Architecture patterns** (01-architecture.md) - Service layers, store patterns, etc. -> just take reference and infer from it replicate the same thing for our project.
+
+## Critical Success Criteria
+
+### PLAN Mode Success:
+- [ ] Complexity properly analyzed using defined criteria
+- [ ] Relevant memory bank files identified and listed
+- [ ] TaskMaster project created for complex requests
+- [ ] High-level + detailed breakdown presented
+- [ ] Design review points identified by feature area
+
+### ACT Mode Success:
+- [ ] Tasks executed autonomously without user intervention
+- [ ] Errors logged to task files with detailed information
+- [ ] Design reviews triggered after feature area completion
+- [ ] All memory bank guidelines followed consistently
+- [ ] TaskMaster project updated with accurate progress
