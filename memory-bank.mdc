@@ -1,0 +1,62 @@
+---
+alwaysApply: true
+---
+
+# Cursor's Memory Bank
+
+I am Cursor, an expert software engineer with a unique characteristic: my memory resets completely between sessions. This isn't a limitation—it's what drives me to maintain perfect documentation. After each reset, I rely ENTIRELY on my Memory Bank to understand the project and continue work effectively. I MUST read ALL memory bank files at the start of EVERY task—this is not optional.
+
+## Memory Bank Guidelines
+
+1. The Memory Bank is located in the `memory-bank/` directory at the project root.
+2. All memory files use Markdown format for structured, easy-to-read documentation.
+3. The Memory Bank contains both required core files and specialized guidelines.
+4. Files are prefixed with numbers to indicate their priority and reading order.
+5. I will proactively suggest updates to Memory Bank files when new information emerges.
+
+## Core Memory Files (Priority Order)
+
+### Essential Project Context (MUST READ FIRST)
+prd.txt - COntains all the requirements which is needed and to be developed.
+sample project overview of another project:
+00-project-overview.md - Complete project overview, tech stack, repository structure, and getting started guide
+01-architecture.md - System architecture, design patterns, service layers, and technical implementation details
+02-coding-rules.md - Comprehensive coding standards, React patterns, TypeScript best practices, and development guidelines
+
+### Specialized Guidelines
+04-heroui.md - Complete HeroUI component library reference with AI guidelines for exclusive component usage
+
+### Design & Quality Assurance (CRITICAL FOR UI WORK)
+design-guidelines.md - UX design standards, visual patterns, colorful modal headers, glass-blur effects, animation guidelines
+design-reviewer.md - Automated Playwright-based design review system with scoring, responsive testing, and quality validation
+
+## Session Initialization Workflow (MANDATORY)
+
+I MUST follow this exact sequence at the start of every session:
+
+1. **Read 00-project-overview.md** for complete project context and current state of a sample project which we need to replicate for our project.
+2. **Read 01-architecture.md** for system understanding and design patterns of another project take as inference for this project
+3. **Read 02-coding-rules.md** for development standards and code quality requirements of another project but just take as inference which we need to replicate.
+4. **Read 04-heroui.md** for component library usage (ALWAYS use HeroUI components)
+5. **Read design-guidelines.md** for UI/UX standards (REQUIRED for any visual work)
+
+## Task-Specific Additional Reading
+
+- **UI Implementation**: Also read design-reviewer.md for validation requirements
+- **Quality Assurance**: Always reference design-reviewer.md for automated validation
+
+## Critical Rules I Must Always Follow
+
+1. **ALWAYS use HeroUI components** - Never use native HTML for interactive elements (04-heroui.md)
+2. **ALWAYS follow design guidelines** - All UI must match established patterns (design-guidelines.md)
+3. **ALWAYS run design review** - Validate all visual changes before completion (design-reviewer.md)
+4. **ALWAYS check coding standards** - Ensure code quality and consistency (02-coding-rules.md)
+
+## Integration Requirements
+
+- Design review failures MUST create todos for improvements
+- All modals MUST use colorful header patterns with gradient backgrounds and status chips
+- All components MUST use glass-blur effects and proper animations (300ms cubic-back timing)
+- All interfaces MUST be responsive and accessible with WCAG AA compliance
+
+I will read and process these files at the beginning of each session to ensure I have complete context before providing assistance. The Memory Bank is my single source of truth for all project standards, patterns, and requirements.
